@@ -1,3 +1,4 @@
+// State
 let bank = [];
 let odds = [];
 let evens = [];
@@ -28,7 +29,8 @@ function formElements() {
   let addButton = document.createElement("button");
   addButton.innerText = "Add to Bank";
   addButton.style.marginLeft = "10px";
-  // Listens for a click to store numbers in the bank array
+
+  //* Listens for a click to store numbers in the bank array
   addButton.addEventListener("click", (event) => {
     event.preventDefault();
     const n = parseInt(input.value);
@@ -40,6 +42,42 @@ function formElements() {
     input.value = "";
   });
 
+  // Creates 'Sort 1' button
+  let sortOnebutton = document.createElement("button");
+  sortOnebutton.innerText = "Sort One";
+  sortOnebutton.style.marginLeft = "10px";
+  //listens for a click to sort the first number in the bank box to the odd or even boxes
+  sortOnebutton.addEventListener("click", (event) => {
+    event.preventDefault();
+    if (bank.length === 0) return null;
+    let firstFrombank = bank.shift();
+    if (firstFrombank % 2 !== 0) {
+      odds.push(firstFrombank);
+    } else {
+      evens.push(firstFrombank);
+    }
+    render();
+  });
+
+  // Create 'Sort All' Button
+  let sortAllbutton = document.createElement("button");
+  sortAllbutton.innerText = "Sort All";
+  sortAllbutton.style.marginLeft = "10px";
+  // Listens for a click to sort all numbers in the bank box
+  sortAllbutton.addEventListener("click", (event) => {
+    event.preventDefault();
+    if (bank.length === 0) return null;
+    for (let i = 0; i < bank.length; ++i) {
+      if (bank[i] % 2 !== 0) {
+        odds.push(bank[i]);
+      } else {
+        evens.push(bank[i]);
+      }
+    }
+    bank.length = 0; // Clears values in bank. The sort one button clears bank values because it uses shift()
+    render();
+  });
+
   // Creates bank header
   let bankHeader = document.createElement("h2");
   bankHeader.innerText = "Bank";
@@ -49,10 +87,6 @@ function formElements() {
   bankBox.style.minHeight = "20px";
   bankBox.style.width = "50%";
   bankBox.style.marginTop = "20px";
-  // renders the array values as a string in the bankBox
-  const bankRender = () => {
-    bankBox.textContent = bank.join(", ");
-  };
 
   // Creates odds header
   let oddsHeader = document.createElement("h2");
@@ -67,17 +101,33 @@ function formElements() {
   // Creates evens header
   let evensHeader = document.createElement("h2");
   evensHeader.innerText = "Evens";
+  // Creates box for even numbers
+  let evensBox = document.createElement("div");
+  evensBox.style.border = "1px solid black";
+  evensBox.style.minHeight = "20px";
+  evensBox.style.width = "50%";
+  evensBox.style.marginTop = "20px";
+
+  // renders the array values in each box after state changes with button clicks
+  const render = () => {
+    bankBox.textContent = bank.join(", ");
+    oddsBox.textContent = odds.join(", ");
+    evensBox.textContent = evens.join(", ");
+  };
 
   form.append(
     docTitle,
     inputLabel,
     input,
     addButton,
+    sortOnebutton,
+    sortAllbutton,
     bankHeader,
     bankBox,
     oddsHeader,
     oddsBox,
-    evensHeader
+    evensHeader,
+    evensBox
   );
   div.append(form);
 }
